@@ -1,0 +1,14 @@
+[project]
+name = "aegis-nexus"
+version = "0.1.0"
+description = "Holder-bound, attenuating delegation for multi-cloud AI-agent workloads, and a Delegation Leakage Surface benchmark against static keys, workload identity and RFC 8693 token exchange."
+requires-python = ">=3.10"
+license = { text = "MIT" }
+dependencies = ["pyjwt>=2.10,<3", "cryptography>=44"]
+
+[project.optional-dependencies]
+test = ["pytest>=8"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
