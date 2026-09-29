@@ -121,7 +121,7 @@ The delegation chain itself is not new. Before building, these were checked:
   policies. Tokens are bearer by default. This is the "DAC without holder binding" ablation's model.
 - **UCAN 1.0**: capability delegation chains with attenuation between key-identified principals; the
   invoker signs, so authority is holder-bound.
-- **Attenuating Authorization Tokens** (draft-niyikiza-oauth-attenuating-agent-tokens, March 2026) and its
+- **Attenuating Authorization Tokens** (draft-niyikiza-oauth-attenuating-agent-tokens, -00 March 2026, -01 June 2026) and its
   implementation **Tenuo** (Apache-2.0, v0.3.1): holder key in `cnf`, PoP per call, `par_hash`, depth
   limit, monotone expiry and capabilities, offline verification, aimed at AI agents. DAC's link invariants
   follow this draft; **the link format and its checks are this draft's, not this project's.** The draft
