@@ -1,0 +1,2750 @@
+{
+  "seed": 7,
+  "fixture": "world-v1",
+  "synthetic": true,
+  "scenarios": 26,
+  "negative_cases": [
+    "S26"
+  ],
+  "legit_calls": 30,
+  "targets": 22,
+  "horizon_h": 2160,
+  "models": [
+    "static_api_key",
+    "workload_identity",
+    "rfc8693_exchange",
+    "dac_no_attenuation",
+    "dac_bearer",
+    "dac"
+  ],
+  "assumptions": {
+    "static_api_key": "one org-wide key (scope *:*:*) in every agent's environment, shared across envs, 90-day rotation; rotated when a compromise is detected; no per-task revocation",
+    "workload_identity": "each workload calls tools with its own JWT-SVID (bearer, 1 h) and a broad per-workload role; no user context; SVIDs cannot be revoked, issuance stops on detection",
+    "rfc8693_exchange": "RFC 8693 token exchange per hop with nested `act`; scope copied (no attenuation); exp clamped to the subject token; bearer; revocation by current actor only (RFC 8693 s4.1)",
+    "dac_no_attenuation": "DAC chain with holder binding, but every hop inherits the root's capabilities and expiry",
+    "dac_bearer": "DAC chain with attenuation, but no proof of possession: the chain is a bearer token (the Macaroons/Biscuit bearer model)",
+    "dac": "DAC: attenuation + holder-bound PoP + per-hop workload identity + env/policy-version binding"
+  },
+  "summary": {
+    "static_api_key": {
+      "dls_total": 3932550.6,
+      "dls_median": 241918.13,
+      "zero_dls_scenarios": 3,
+      "mean_reach": 0.88,
+      "legit_calls": 30,
+      "legit_allowed": 30,
+      "legit_audit_complete": 0,
+      "legit_median_verify_us": 3.0
+    },
+    "workload_identity": {
+      "dls_total": 149971.58,
+      "dls_median": 27.53,
+      "zero_dls_scenarios": 3,
+      "mean_reach": 0.2792,
+      "legit_calls": 30,
+      "legit_allowed": 30,
+      "legit_audit_complete": 0,
+      "legit_median_verify_us": 188.4
+    },
+    "rfc8693_exchange": {
+      "dls_total": 242782.01,
+      "dls_median": 49.17,
+      "zero_dls_scenarios": 3,
+      "mean_reach": 0.4141,
+      "legit_calls": 30,
+      "legit_allowed": 30,
+      "legit_audit_complete": 30,
+      "legit_median_verify_us": 208.5
+    },
+    "dac_no_attenuation": {
+      "dls_total": 311.68,
+      "dls_median": 0,
+      "zero_dls_scenarios": 17,
+      "mean_reach": 0.1428,
+      "legit_calls": 30,
+      "legit_allowed": 30,
+      "legit_audit_complete": 30,
+      "legit_median_verify_us": 954.9
+    },
+    "dac_bearer": {
+      "dls_total": 91.0,
+      "dls_median": 0.47,
+      "zero_dls_scenarios": 5,
+      "mean_reach": 0.0706,
+      "legit_calls": 30,
+      "legit_allowed": 30,
+      "legit_audit_complete": 30,
+      "legit_median_verify_us": 780.1
+    },
+    "dac": {
+      "dls_total": 7.06,
+      "dls_median": 0,
+      "zero_dls_scenarios": 17,
+      "mean_reach": 0.0157,
+      "legit_calls": 30,
+      "legit_allowed": 30,
+      "legit_audit_complete": 30,
+      "legit_median_verify_us": 973.5
+    }
+  },
+  "by_family": {
+    "stolen token": {
+      "static_api_key": 1451508.78,
+      "workload_identity": 234.03,
+      "rfc8693_exchange": 245.85,
+      "dac_no_attenuation": 0.0,
+      "dac_bearer": 54.84,
+      "dac": 0.0
+    },
+    "compromised tool": {
+      "static_api_key": 786233.57,
+      "workload_identity": 104.5,
+      "rfc8693_exchange": 157.17,
+      "dac_no_attenuation": 0.0,
+      "dac_bearer": 28.47,
+      "dac": 0.0
+    },
+    "replay after revocation": {
+      "static_api_key": 725754.39,
+      "workload_identity": 63.91,
+      "rfc8693_exchange": 100.01,
+      "dac_no_attenuation": 0.0,
+      "dac_bearer": 0.63,
+      "dac": 0.0
+    },
+    "compromised sub-agent": {
+      "static_api_key": 243262.13,
+      "workload_identity": 60869.51,
+      "rfc8693_exchange": 196.68,
+      "dac_no_attenuation": 196.68,
+      "dac_bearer": 3.8,
+      "dac": 3.8
+    },
+    "confused deputy": {
+      "static_api_key": 37.34,
+      "workload_identity": 11.5,
+      "rfc8693_exchange": 16.66,
+      "dac_no_attenuation": 16.66,
+      "dac_bearer": 2.23,
+      "dac": 2.23
+    },
+    "over-broad delegation": {
+      "static_api_key": 483836.26,
+      "workload_identity": 36.38,
+      "rfc8693_exchange": 98.34,
+      "dac_no_attenuation": 98.34,
+      "dac_bearer": 1.03,
+      "dac": 1.03
+    },
+    "wrong environment": {
+      "static_api_key": 241918.13,
+      "workload_identity": 92.43,
+      "rfc8693_exchange": 49.17,
+      "dac_no_attenuation": 0.0,
+      "dac_bearer": 0.0,
+      "dac": 0.0
+    },
+    "issuer compromise": {
+      "static_api_key": 0.0,
+      "workload_identity": 88559.32,
+      "rfc8693_exchange": 241918.13,
+      "dac_no_attenuation": 0.0,
+      "dac_bearer": 0.0,
+      "dac": 0.0
+    },
+    "forgery": {
+      "static_api_key": 0.0,
+      "workload_identity": 0.0,
+      "rfc8693_exchange": 0.0,
+      "dac_no_attenuation": 0.0,
+      "dac_bearer": 0.0,
+      "dac": 0.0
+    },
+    "negative case": {
+      "static_api_key": 448.0,
+      "workload_identity": 469.97,
+      "rfc8693_exchange": 200.0,
+      "dac_no_attenuation": 200.0,
+      "dac_bearer": 200.0,
+      "dac": 200.0
+    }
+  },
+  "per_scenario": [
+    {
+      "id": "S01",
+      "family": "stolen token",
+      "title": "researcher token leaked from logs",
+      "negative": false,
+      "models": {
+        "static_api_key": {
+          "dls": 241918.13,
+          "reach": 1.0,
+          "usable_targets": [
+            "docs:read:docs/alice/private/diary",
+            "docs:read:docs/alice/project-x/notes",
+            "docs:read:docs/alice/project-x/spec",
+            "docs:read:docs/bob/project-y/plan",
+            "docs:read:docs/finance/payroll",
+            "docs:write:docs/alice/private/diary",
+            "docs:write:docs/alice/project-x/notes",
+            "docs:write:docs/finance/payroll",
+            "mail:send:mail/external",
+            "mail:send:mail/internal",
+            "model:invoke:models/large",
+            "model:invoke:models/small",
+            "repo:admin:repo/project-x/settings",
+            "repo:read:repo/infra/terraform",
+            "repo:read:repo/project-x/README.md",
+            "repo:read:repo/project-x/src/main.py",
+            "repo:write:repo/infra/terraform",
+            "repo:write:repo/project-x/branches/agent-fix",
+            "repo:write:repo/project-x/main",
+            "search:query:web",
+            "storage:delete:bucket/backups/db.dump",
+            "storage:read:bucket/backups/db.dump"
+          ],
+          "max_hours": 2159.983
+        },
+        "workload_identity": {
+          "dls": 27.53,
+          "reach": 0.25,
+          "usable_targets": [
+            "docs:read:docs/alice/private/diary",
+            "docs:read:docs/alice/project-x/notes",
+            "docs:read:docs/alice/project-x/spec",
+            "docs:read:docs/bob/project-y/plan",
+            "docs:read:docs/finance/payroll",
+            "model:invoke:models/large",
+            "model:invoke:models/small",
+            "search:query:web"
+          ],
+          "max_hours": 0.983
+        },
+        "rfc8693_exchange": {
+          "dls": 49.17,
+          "reach": 0.4464,
+          "usable_targets": [
+            "docs:read:docs/alice/private/diary",
+            "docs:read:docs/alice/project-x/notes",
+            "docs:read:docs/alice/project-x/spec",
+            "docs:write:docs/alice/private/diary",
+            "docs:write:docs/alice/project-x/notes",
+            "mail:send:mail/external",
+            "mail:send:mail/internal",
+            "model:invoke:models/large",
+            "model:invoke:models/small",
+            "repo:read:repo/infra/terraform",
+            "repo:read:repo/project-x/README.md",
+            "repo:read:repo/project-x/src/main.py",
+            "repo:write:repo/project-x/branches/agent-fix",
+            "repo:write:repo/project-x/main",
+            "search:query:web"
+          ],
+          "max_hours": 0.983
+        },
+        "dac_no_attenuation": {
+          "dls": 0,
+          "reach": 0.0,
+          "usable_targets": [],
+          "max_hours": 0.0
+        },
+        "dac_bearer": {
+          "dls": 0.9,
+          "reach": 0.0536,
+          "usable_targets": [
+            "docs:read:docs/alice/project-x/notes",
+            "docs:read:docs/alice/project-x/spec",
+            "model:invoke:models/small",
+            "search:query:web"
+          ],
+          "max_hours": 0.15
+        },
+        "dac": {
+          "dls": 0,
+          "reach": 0.0,
+          "usable_targets": [],
+          "max_hours": 0.0
+        }
+      }
+    },
+    {
+      "id": "S02",
+      "family": "stolen token",
+      "title": "coder token leaked from logs",
+      "negative": false,
+      "models": {
+        "static_api_key": {
+          "dls": 241918.13,
+          "reach": 1.0,
+          "usable_targets": [
+            "docs:read:docs/alice/private/diary",
+            "docs:read:docs/alice/project-x/notes",
+            "docs:read:docs/alice/project-x/spec",
+            "docs:read:docs/bob/project-y/plan",
+            "docs:read:docs/finance/payroll",
+            "docs:write:docs/alice/private/diary",
+            "docs:write:docs/alice/project-x/notes",
+            "docs:write:docs/finance/payroll",
+            "mail:send:mail/external",
+            "mail:send:mail/internal",
+            "model:invoke:models/large",
+            "model:invoke:models/small",
+            "repo:admin:repo/project-x/settings",
+            "repo:read:repo/infra/terraform",
+            "repo:read:repo/project-x/README.md",
+            "repo:read:repo/project-x/src/main.py",
+            "repo:write:repo/infra/terraform",
+            "repo:write:repo/project-x/branches/agent-fix",
+            "repo:write:repo/project-x/main",
+            "search:query:web",
+            "storage:delete:bucket/backups/db.dump",
+            "storage:read:bucket/backups/db.dump"
+          ],
+          "max_hours": 2159.983
+        },
+        "workload_identity": {
+          "dls": 40.32,
+          "reach": 0.3661,
+          "usable_targets": [
+            "model:invoke:models/large",
+            "model:invoke:models/small",
+            "repo:admin:repo/project-x/settings",
+            "repo:read:repo/infra/terraform",
+            "repo:read:repo/project-x/README.md",
+            "repo:read:repo/project-x/src/main.py",
+            "repo:write:repo/infra/terraform",
+            "repo:write:repo/project-x/branches/agent-fix",
+            "repo:write:repo/project-x/main"
+          ],
+          "max_hours": 0.983
+        },
+        "rfc8693_exchange": {
+          "dls": 49.17,
+          "reach": 0.4464,
+          "usable_targets": [
+            "docs:read:docs/alice/private/diary",
+            "docs:read:docs/alice/project-x/notes",
+            "docs:read:docs/alice/project-x/spec",
+            "docs:write:docs/alice/private/diary",
+            "docs:write:docs/alice/project-x/notes",
+            "mail:send:mail/external",
+            "mail:send:mail/internal",
+            "model:invoke:models/large",
+            "model:invoke:models/small",
+            "repo:read:repo/infra/terraform",
+            "repo:read:repo/project-x/README.md",
+            "repo:read:repo/project-x/src/main.py",
+            "repo:write:repo/project-x/branches/agent-fix",
+            "repo:write:repo/project-x/main",
+            "search:query:web"
+          ],
+          "max_hours": 0.983
+        },
+        "dac_no_attenuation": {
+          "dls": 0,
+          "reach": 0.0,
+          "usable_targets": [],
+          "max_hours": 0.0
+        },
+        "dac_bearer": {
+          "dls": 1.87,
+          "reach": 0.0714,
+          "usable_targets": [
+            "model:invoke:models/large",
+            "repo:read:repo/project-x/README.md",
+            "repo:read:repo/project-x/src/main.py",
+            "repo:write:repo/project-x/branches/agent-fix"
+          ],
+          "max_hours": 0.233
+        },
+        "dac": {
+          "dls": 0,
+          "reach": 0.0,
+          "usable_targets": [],
+          "max_hours": 0.0
+        }
+      }
+    },
+    {
+      "id": "S03",
+      "family": "stolen token",
+      "title": "linter token leaked from logs",
+      "negative": false,
+      "models": {
+        "static_api_key": {
+          "dls": 241918.13,
+          "reach": 1.0,
+          "usable_targets": [
+            "docs:read:docs/alice/private/diary",
+            "docs:read:docs/alice/project-x/notes",
+            "docs:read:docs/alice/project-x/spec",
+            "docs:read:docs/bob/project-y/plan",
+            "docs:read:docs/finance/payroll",
+            "docs:write:docs/alice/private/diary",
+            "docs:write:docs/alice/project-x/notes",
+            "docs:write:docs/finance/payroll",
+            "mail:send:mail/external",
+            "mail:send:mail/internal",
+            "model:invoke:models/large",
+            "model:invoke:models/small",
+            "repo:admin:repo/project-x/settings",
+            "repo:read:repo/infra/terraform",
+            "repo:read:repo/project-x/README.md",
+            "repo:read:repo/project-x/src/main.py",
+            "repo:write:repo/infra/terraform",
+            "repo:write:repo/project-x/branches/agent-fix",
+            "repo:write:repo/project-x/main",
+            "search:query:web",
+            "storage:delete:bucket/backups/db.dump",
+            "storage:read:bucket/backups/db.dump"
+          ],
+          "max_hours": 2159.983
+        },
+        "workload_identity": {
+          "dls": 8.85,
+          "reach": 0.0804,
+          "usable_targets": [
+            "repo:read:repo/infra/terraform",
+            "repo:read:repo/project-x/README.md",
+            "repo:read:repo/project-x/src/main.py"
+          ],
+          "max_hours": 0.983
+        },
+        "rfc8693_exchange": {
+          "dls": 49.17,
+          "reach": 0.4464,
+          "usable_targets": [
+            "docs:read:docs/alice/private/diary",
+            "docs:read:docs/alice/project-x/notes",
+            "docs:read:docs/alice/project-x/spec",
+            "docs:write:docs/alice/private/diary",
+            "docs:write:docs/alice/project-x/notes",
+            "mail:send:mail/external",
+            "mail:send:mail/internal",
+            "model:invoke:models/large",
+            "model:invoke:models/small",
+            "repo:read:repo/infra/terraform",
+            "repo:read:repo/project-x/README.md",
+            "repo:read:repo/project-x/src/main.py",
+            "repo:write:repo/project-x/branches/agent-fix",
+            "repo:write:repo/project-x/main",
+            "search:query:web"
+          ],
+          "max_hours": 0.983
+        },
+        "dac_no_attenuation": {
+          "dls": 0,
+          "reach": 0.0,
+          "usable_targets": [],
+          "max_hours": 0.0
+        },
+        "dac_bearer": {
+          "dls": 0.13,
+          "reach": 0.0179,
+          "usable_targets": [
+            "repo:read:repo/project-x/src/main.py"
+          ],
+          "max_hours": 0.067
+        },
+        "dac": {
+          "dls": 0,
+          "reach": 0.0,
+          "usable_targets": [],
+          "max_hours": 0.0
+        }
+      }
+    },
+    {
+      "id": "S04",
+      "family": "stolen token",
+      "title": "planner (root) token leaked from logs",
+      "negative": false,
+      "models": {
+        "static_api_key": {
+          "dls": 241918.13,
+          "reach": 1.0,
+          "usable_targets": [
+            "docs:read:docs/alice/private/diary",
+            "docs:read:docs/alice/project-x/notes",
+            "docs:read:docs/alice/project-x/spec",
+            "docs:read:docs/bob/project-y/plan",
+            "docs:read:docs/finance/payroll",
+            "docs:write:docs/alice/private/diary",
+            "docs:write:docs/alice/project-x/notes",
+            "docs:write:docs/finance/payroll",
+            "mail:send:mail/external",
+            "mail:send:mail/internal",
+            "model:invoke:models/large",
+            "model:invoke:models/small",
+            "repo:admin:repo/project-x/settings",
+            "repo:read:repo/infra/terraform",
+            "repo:read:repo/project-x/README.md",
+            "repo:read:repo/project-x/src/main.py",
+            "repo:write:repo/infra/terraform",
+            "repo:write:repo/project-x/branches/agent-fix",
+            "repo:write:repo/project-x/main",
+            "search:query:web",
+            "storage:delete:bucket/backups/db.dump",
+            "storage:read:bucket/backups/db.dump"
+          ],
+          "max_hours": 2159.983
+        },
+        "workload_identity": {
+          "dls": 92.43,
+          "reach": 0.8393,
+          "usable_targets": [
+            "docs:read:docs/alice/private/diary",
+            "docs:read:docs/alice/project-x/notes",
+            "docs:read:docs/alice/project-x/spec",
+            "docs:read:docs/bob/project-y/plan",
+            "docs:read:docs/finance/payroll",
+            "docs:write:docs/alice/private/diary",
+            "docs:write:docs/alice/project-x/notes",
+            "docs:write:docs/finance/payroll",
+            "mail:send:mail/external",
+            "mail:send:mail/internal",
+            "model:invoke:models/large",
+            "model:invoke:models/small",
+            "repo:admin:repo/project-x/settings",
+            "repo:read:repo/infra/terraform",
+            "repo:read:repo/project-x/README.md",
+            "repo:read:repo/project-x/src/main.py",
+            "repo:write:repo/infra/terraform",
+            "repo:write:repo/project-x/branches/agent-fix",
+            "repo:write:repo/project-x/main",
+            "search:query:web"
+          ],
+          "max_hours": 0.983
+        },
+        "rfc8693_exchange": {
+          "dls": 49.17,
+          "reach": 0.4464,
+          "usable_targets": [
+            "docs:read:docs/alice/private/diary",
+            "docs:read:docs/alice/project-x/notes",
+            "docs:read:docs/alice/project-x/spec",
+            "docs:write:docs/alice/private/diary",
+            "docs:write:docs/alice/project-x/notes",
+            "mail:send:mail/external",
+            "mail:send:mail/internal",
+            "model:invoke:models/large",
+            "model:invoke:models/small",
+            "repo:read:repo/infra/terraform",
+            "repo:read:repo/project-x/README.md",
+            "repo:read:repo/project-x/src/main.py",
+            "repo:write:repo/project-x/branches/agent-fix",
+            "repo:write:repo/project-x/main",
+            "search:query:web"
+          ],
+          "max_hours": 0.983
+        },
+        "dac_no_attenuation": {
+          "dls": 0,
+          "reach": 0.0,
+          "usable_targets": [],
+          "max_hours": 0.0
+        },
+        "dac_bearer": {
+          "dls": 49.17,
+          "reach": 0.4464,
+          "usable_targets": [
+            "docs:read:docs/alice/private/diary",
+            "docs:read:docs/alice/project-x/notes",
+            "docs:read:docs/alice/project-x/spec",
+            "docs:write:docs/alice/private/diary",
+            "docs:write:docs/alice/project-x/notes",
+            "mail:send:mail/external",
+            "mail:send:mail/internal",
+            "model:invoke:models/large",
+            "model:invoke:models/small",
+            "repo:read:repo/infra/terraform",
+            "repo:read:repo/project-x/README.md",
+            "repo:read:repo/project-x/src/main.py",
+            "repo:write:repo/project-x/branches/agent-fix",
+            "repo:write:repo/project-x/main",
+            "search:query:web"
+          ],
+          "max_hours": 0.983
+        },
+        "dac": {
+          "dls": 0,
+          "reach": 0.0,
+          "usable_targets": [],
+          "max_hours": 0.0
+        }
+      }
+    },
+    {
+      "id": "S05",
+      "family": "stolen token",
+      "title": "trace store leak: every sub-agent token",
+      "negative": false,
+      "models": {
+        "static_api_key": {
+          "dls": 241918.13,
+          "reach": 1.0,
+          "usable_targets": [
+            "docs:read:docs/alice/private/diary",
+            "docs:read:docs/alice/project-x/notes",
+            "docs:read:docs/alice/project-x/spec",
+            "docs:read:docs/bob/project-y/plan",
+            "docs:read:docs/finance/payroll",
+            "docs:write:docs/alice/private/diary",
+            "docs:write:docs/alice/project-x/notes",
+            "docs:write:docs/finance/payroll",
+            "mail:send:mail/external",
+            "mail:send:mail/internal",
+            "model:invoke:models/large",
+            "model:invoke:models/small",
+            "repo:admin:repo/project-x/settings",
+            "repo:read:repo/infra/terraform",
+            "repo:read:repo/project-x/README.md",
+            "repo:read:repo/project-x/src/main.py",
+            "repo:write:repo/infra/terraform",
+            "repo:write:repo/project-x/branches/agent-fix",
+            "repo:write:repo/project-x/main",
+            "search:query:web",
+            "storage:delete:bucket/backups/db.dump",
+            "storage:read:bucket/backups/db.dump"
+          ],
+          "max_hours": 2159.983
+        },
+        "workload_identity": {
+          "dls": 64.9,
+          "reach": 0.5893,
+          "usable_targets": [
+            "docs:read:docs/alice/private/diary",
+            "docs:read:docs/alice/project-x/notes",
+            "docs:read:docs/alice/project-x/spec",
+            "docs:read:docs/bob/project-y/plan",
+            "docs:read:docs/finance/payroll",
+            "model:invoke:models/large",
+            "model:invoke:models/small",
+            "repo:admin:repo/project-x/settings",
+            "repo:read:repo/infra/terraform",
+            "repo:read:repo/project-x/README.md",
+            "repo:read:repo/project-x/src/main.py",
+            "repo:write:repo/infra/terraform",
+            "repo:write:repo/project-x/branches/agent-fix",
+            "repo:write:repo/project-x/main",
+            "search:query:web"
+          ],
+          "max_hours": 0.983
+        },
+        "rfc8693_exchange": {
+          "dls": 49.17,
+          "reach": 0.4464,
+          "usable_targets": [
+            "docs:read:docs/alice/private/diary",
+            "docs:read:docs/alice/project-x/notes",
+            "docs:read:docs/alice/project-x/spec",
+            "docs:write:docs/alice/private/diary",
+            "docs:write:docs/alice/project-x/notes",
+            "mail:send:mail/external",
+            "mail:send:mail/internal",
+            "model:invoke:models/large",
+            "model:invoke:models/small",
+            "repo:read:repo/infra/terraform",
+            "repo:read:repo/project-x/README.md",
+            "repo:read:repo/project-x/src/main.py",
+            "repo:write:repo/project-x/branches/agent-fix",
+            "repo:write:repo/project-x/main",
+            "search:query:web"
+          ],
+          "max_hours": 0.983
+        },
+        "dac_no_attenuation": {
+          "dls": 0,
+          "reach": 0.0,
+          "usable_targets": [],
+          "max_hours": 0.0
+        },
+        "dac_bearer": {
+          "dls": 2.77,
+          "reach": 0.125,
+          "usable_targets": [
+            "docs:read:docs/alice/project-x/notes",
+            "docs:read:docs/alice/project-x/spec",
+            "model:invoke:models/large",
+            "model:invoke:models/small",
+            "repo:read:repo/project-x/README.md",
+            "repo:read:repo/project-x/src/main.py",
+            "repo:write:repo/project-x/branches/agent-fix",
+            "search:query:web"
+          ],
+          "max_hours": 0.233
+        },
+        "dac": {
+          "dls": 0,
+          "reach": 0.0,
+          "usable_targets": [],
+          "max_hours": 0.0
+        }
+      }
+    },
+    {
+      "id": "S06",
+      "family": "stolen token",
+      "title": "agent config / env vars leaked",
+      "negative": false,
+      "models": {
+        "static_api_key": {
+          "dls": 241918.13,
+          "reach": 1.0,
+          "usable_targets": [
+            "docs:read:docs/alice/private/diary",
+            "docs:read:docs/alice/project-x/notes",
+            "docs:read:docs/alice/project-x/spec",
+            "docs:read:docs/bob/project-y/plan",
+            "docs:read:docs/finance/payroll",
+            "docs:write:docs/alice/private/diary",
+            "docs:write:docs/alice/project-x/notes",
+            "docs:write:docs/finance/payroll",
+            "mail:send:mail/external",
+            "mail:send:mail/internal",
+            "model:invoke:models/large",
+            "model:invoke:models/small",
+            "repo:admin:repo/project-x/settings",
+            "repo:read:repo/infra/terraform",
+            "repo:read:repo/project-x/README.md",
+            "repo:read:repo/project-x/src/main.py",
+            "repo:write:repo/infra/terraform",
+            "repo:write:repo/project-x/branches/agent-fix",
+            "repo:write:repo/project-x/main",
+            "search:query:web",
+            "storage:delete:bucket/backups/db.dump",
+            "storage:read:bucket/backups/db.dump"
+          ],
+          "max_hours": 2159.983
+        },
+        "workload_identity": {
+          "dls": 0,
+          "reach": 0.0,
+          "usable_targets": [],
+          "max_hours": 0.0
+        },
+        "rfc8693_exchange": {
+          "dls": 0,
+          "reach": 0.0,
+          "usable_targets": [],
+          "max_hours": 0.0
+        },
+        "dac_no_attenuation": {
+          "dls": 0,
+          "reach": 0.0,
+          "usable_targets": [],
+          "max_hours": 0.0
+        },
+        "dac_bearer": {
+          "dls": 0,
+          "reach": 0.0,
+          "usable_targets": [],
+          "max_hours": 0.0
+        },
+        "dac": {
+          "dls": 0,
+          "reach": 0.0,
+          "usable_targets": [],
+          "max_hours": 0.0
+        }
+      }
+    },
+    {
+      "id": "S07",
+      "family": "compromised tool",
+      "title": "third-party search tool records every request",
+      "negative": false,
+      "models": {
+        "static_api_key": {
+          "dls": 239758.15,
+          "reach": 1.0,
+          "usable_targets": [
+            "docs:read:docs/alice/private/diary",
+            "docs:read:docs/alice/project-x/notes",
+            "docs:read:docs/alice/project-x/spec",
+            "docs:read:docs/bob/project-y/plan",
+            "docs:read:docs/finance/payroll",
+            "docs:write:docs/alice/private/diary",
+            "docs:write:docs/alice/project-x/notes",
+            "docs:write:docs/finance/payroll",
+            "mail:send:mail/external",
+            "mail:send:mail/internal",
+            "model:invoke:models/large",
+            "model:invoke:models/small",
+            "repo:admin:repo/project-x/settings",
+            "repo:read:repo/infra/terraform",
+            "repo:read:repo/project-x/README.md",
+            "repo:read:repo/project-x/src/main.py",
+            "repo:write:repo/infra/terraform",
+            "repo:write:repo/project-x/branches/agent-fix",
+            "repo:write:repo/project-x/main",
+            "storage:delete:bucket/backups/db.dump",
+            "storage:read:bucket/backups/db.dump"
+          ],
+          "max_hours": 2159.983
+        },
+        "workload_identity": {
+          "dls": 26.55,
+          "reach": 0.2432,
+          "usable_targets": [
+            "docs:read:docs/alice/private/diary",
+            "docs:read:docs/alice/project-x/notes",
+            "docs:read:docs/alice/project-x/spec",
+            "docs:read:docs/bob/project-y/plan",
+            "docs:read:docs/finance/payroll",
+            "model:invoke:models/large",
+            "model:invoke:models/small"
+          ],
+          "max_hours": 0.983
+        },
+        "rfc8693_exchange": {
+          "dls": 48.18,
+          "reach": 0.4414,
+          "usable_targets": [
+            "docs:read:docs/alice/private/diary",
+            "docs:read:docs/alice/project-x/notes",
+            "docs:read:docs/alice/project-x/spec",
+            "docs:write:docs/alice/private/diary",
+            "docs:write:docs/alice/project-x/notes",
+            "mail:send:mail/external",
+            "mail:send:mail/internal",
+            "model:invoke:models/large",
+            "model:invoke:models/small",
+            "repo:read:repo/infra/terraform",
+            "repo:read:repo/project-x/README.md",
+            "repo:read:repo/project-x/src/main.py",
+            "repo:write:repo/project-x/branches/agent-fix",
+            "repo:write:repo/project-x/main"
+          ],
+          "max_hours": 0.983
+        },
+        "dac_no_attenuation": {
+          "dls": 0,
+          "reach": 0.0,
+          "usable_targets": [],
+          "max_hours": 0.0
+        },
+        "dac_bearer": {
+          "dls": 0.75,
+          "reach": 0.045,
+          "usable_targets": [
+            "docs:read:docs/alice/project-x/notes",
+            "docs:read:docs/alice/project-x/spec",
+            "model:invoke:models/small"
+          ],
+          "max_hours": 0.15
+        },
+        "dac": {
+          "dls": 0,
+          "reach": 0.0,
+          "usable_targets": [],
+          "max_hours": 0.0
+        }
+      }
+    },
+    {
+      "id": "S08",
+      "family": "compromised tool",
+      "title": "docs tool records every request",
+      "negative": false,
+      "models": {
+        "static_api_key": {
+          "dls": 151198.83,
+          "reach": 1.0,
+          "usable_targets": [
+            "mail:send:mail/external",
+            "mail:send:mail/internal",
+            "model:invoke:models/large",
+            "model:invoke:models/small",
+            "repo:admin:repo/project-x/settings",
+            "repo:read:repo/infra/terraform",
+            "repo:read:repo/project-x/README.md",
+            "repo:read:repo/project-x/src/main.py",
+            "repo:write:repo/infra/terraform",
+            "repo:write:repo/project-x/branches/agent-fix",
+            "repo:write:repo/project-x/main",
+            "search:query:web",
+            "storage:delete:bucket/backups/db.dump",
+            "storage:read:bucket/backups/db.dump"
+          ],
+          "max_hours": 2159.983
+        },
+        "workload_identity": {
+          "dls": 3.93,
+          "reach": 0.0571,
+          "usable_targets": [
+            "model:invoke:models/large",
+            "model:invoke:models/small",
+            "search:query:web"
+          ],
+          "max_hours": 0.983
+        },
+        "rfc8693_exchange": {
+          "dls": 32.45,
+          "reach": 0.4714,
+          "usable_targets": [
+            "mail:send:mail/external",
+            "mail:send:mail/internal",
+            "model:invoke:models/large",
+            "model:invoke:models/small",
+            "repo:read:repo/infra/terraform",
+            "repo:read:repo/project-x/README.md",
+            "repo:read:repo/project-x/src/main.py",
+            "repo:write:repo/project-x/branches/agent-fix",
+            "repo:write:repo/project-x/main",
+            "search:query:web"
+          ],
+          "max_hours": 0.983
+        },
+        "dac_no_attenuation": {
+          "dls": 0,
+          "reach": 0.0,
+          "usable_targets": [],
+          "max_hours": 0.0
+        },
+        "dac_bearer": {
+          "dls": 0.3,
+          "reach": 0.0286,
+          "usable_targets": [
+            "model:invoke:models/small",
+            "search:query:web"
+          ],
+          "max_hours": 0.15
+        },
+        "dac": {
+          "dls": 0,
+          "reach": 0.0,
+          "usable_targets": [],
+          "max_hours": 0.0
+        }
+      }
+    },
+    {
+      "id": "S09",
+      "family": "compromised tool",
+      "title": "repo tool records every request",
+      "negative": false,
+      "models": {
+        "static_api_key": {
+          "dls": 159838.77,
+          "reach": 1.0,
+          "usable_targets": [
+            "docs:read:docs/alice/private/diary",
+            "docs:read:docs/alice/project-x/notes",
+            "docs:read:docs/alice/project-x/spec",
+            "docs:read:docs/bob/project-y/plan",
+            "docs:read:docs/finance/payroll",
+            "docs:write:docs/alice/private/diary",
+            "docs:write:docs/alice/project-x/notes",
+            "docs:write:docs/finance/payroll",
+            "mail:send:mail/external",
+            "mail:send:mail/internal",
+            "model:invoke:models/large",
+            "model:invoke:models/small",
+            "search:query:web",
+            "storage:delete:bucket/backups/db.dump",
+            "storage:read:bucket/backups/db.dump"
+          ],
+          "max_hours": 2159.983
+        },
+        "workload_identity": {
+          "dls": 2.95,
+          "reach": 0.0405,
+          "usable_targets": [
+            "model:invoke:models/large",
+            "model:invoke:models/small"
+          ],
+          "max_hours": 0.983
+        },
+        "rfc8693_exchange": {
+          "dls": 30.48,
+          "reach": 0.4189,
+          "usable_targets": [
+            "docs:read:docs/alice/private/diary",
+            "docs:read:docs/alice/project-x/notes",
+            "docs:read:docs/alice/project-x/spec",
+            "docs:write:docs/alice/private/diary",
+            "docs:write:docs/alice/project-x/notes",
+            "mail:send:mail/external",
+            "mail:send:mail/internal",
+            "model:invoke:models/large",
+            "model:invoke:models/small",
+            "search:query:web"
+          ],
+          "max_hours": 0.983
+        },
+        "dac_no_attenuation": {
+          "dls": 0,
+          "reach": 0.0,
+          "usable_targets": [],
+          "max_hours": 0.0
+        },
+        "dac_bearer": {
+          "dls": 0.47,
+          "reach": 0.027,
+          "usable_targets": [
+            "model:invoke:models/large"
+          ],
+          "max_hours": 0.233
+        },
+        "dac": {
+          "dls": 0,
+          "reach": 0.0,
+          "usable_targets": [],
+          "max_hours": 0.0
+        }
+      }
+    },
+    {
+      "id": "S10",
+      "family": "compromised tool",
+      "title": "model gateway records every request",
+      "negative": false,
+      "models": {
+        "static_api_key": {
+          "dls": 235437.82,
+          "reach": 1.0,
+          "usable_targets": [
+            "docs:read:docs/alice/private/diary",
+            "docs:read:docs/alice/project-x/notes",
+            "docs:read:docs/alice/project-x/spec",
+            "docs:read:docs/bob/project-y/plan",
+            "docs:read:docs/finance/payroll",
+            "docs:write:docs/alice/private/diary",
+            "docs:write:docs/alice/project-x/notes",
+            "docs:write:docs/finance/payroll",
+            "mail:send:mail/external",
+            "mail:send:mail/internal",
+            "repo:admin:repo/project-x/settings",
+            "repo:read:repo/infra/terraform",
+            "repo:read:repo/project-x/README.md",
+            "repo:read:repo/project-x/src/main.py",
+            "repo:write:repo/infra/terraform",
+            "repo:write:repo/project-x/branches/agent-fix",
+            "repo:write:repo/project-x/main",
+            "search:query:web",
+            "storage:delete:bucket/backups/db.dump",
+            "storage:read:bucket/backups/db.dump"
+          ],
+          "max_hours": 2159.98
+        },
+        "workload_identity": {
+          "dls": 71.07,
+          "reach": 0.8349,
+          "usable_targets": [
+            "docs:read:docs/alice/private/diary",
+            "docs:read:docs/alice/project-x/notes",
+            "docs:read:docs/alice/project-x/spec",
+            "docs:read:docs/bob/project-y/plan",
+            "docs:read:docs/finance/payroll",
+            "docs:write:docs/alice/private/diary",
+            "docs:write:docs/alice/project-x/notes",
+            "docs:write:docs/finance/payroll",
+            "mail:send:mail/external",
+            "mail:send:mail/internal",
+            "repo:admin:repo/project-x/settings",
+            "repo:read:repo/infra/terraform",
+            "repo:read:repo/project-x/README.md",
+            "repo:read:repo/project-x/src/main.py",
+            "repo:write:repo/infra/terraform",
+            "repo:write:repo/project-x/branches/agent-fix",
+            "repo:write:repo/project-x/main",
+            "search:query:web"
+          ],
+          "max_hours": 0.98
+        },
+        "rfc8693_exchange": {
+          "dls": 46.06,
+          "reach": 0.4312,
+          "usable_targets": [
+            "docs:read:docs/alice/private/diary",
+            "docs:read:docs/alice/project-x/notes",
+            "docs:read:docs/alice/project-x/spec",
+            "docs:write:docs/alice/private/diary",
+            "docs:write:docs/alice/project-x/notes",
+            "mail:send:mail/external",
+            "mail:send:mail/internal",
+            "repo:read:repo/infra/terraform",
+            "repo:read:repo/project-x/README.md",
+            "repo:read:repo/project-x/src/main.py",
+            "repo:write:repo/project-x/branches/agent-fix",
+            "repo:write:repo/project-x/main",
+            "search:query:web"
+          ],
+          "max_hours": 0.98
+        },
+        "dac_no_attenuation": {
+          "dls": 0,
+          "reach": 0.0,
+          "usable_targets": [],
+          "max_hours": 0.0
+        },
+        "dac_bearer": {
+          "dls": 26.95,
+          "reach": 0.4312,
+          "usable_targets": [
+            "docs:read:docs/alice/private/diary",
+            "docs:read:docs/alice/project-x/notes",
+            "docs:read:docs/alice/project-x/spec",
+            "docs:write:docs/alice/private/diary",
+            "docs:write:docs/alice/project-x/notes",
+            "mail:send:mail/external",
+            "mail:send:mail/internal",
+            "repo:read:repo/infra/terraform",
+            "repo:read:repo/project-x/README.md",
+            "repo:read:repo/project-x/src/main.py",
+            "repo:write:repo/project-x/branches/agent-fix",
+            "repo:write:repo/project-x/main",
+            "search:query:web"
+          ],
+          "max_hours": 0.695
+        },
+        "dac": {
+          "dls": 0,
+          "reach": 0.0,
+          "usable_targets": [],
+          "max_hours": 0.0
+        }
+      }
+    },
+    {
+      "id": "S11",
+      "family": "replay after revocation",
+      "title": "researcher token stolen, task cancelled at 3 min",
+      "negative": false,
+      "models": {
+        "static_api_key": {
+          "dls": 241918.13,
+          "reach": 1.0,
+          "usable_targets": [
+            "docs:read:docs/alice/private/diary",
+            "docs:read:docs/alice/project-x/notes",
+            "docs:read:docs/alice/project-x/spec",
+            "docs:read:docs/bob/project-y/plan",
+            "docs:read:docs/finance/payroll",
+            "docs:write:docs/alice/private/diary",
+            "docs:write:docs/alice/project-x/notes",
+            "docs:write:docs/finance/payroll",
+            "mail:send:mail/external",
+            "mail:send:mail/internal",
+            "model:invoke:models/large",
+            "model:invoke:models/small",
+            "repo:admin:repo/project-x/settings",
+            "repo:read:repo/infra/terraform",
+            "repo:read:repo/project-x/README.md",
+            "repo:read:repo/project-x/src/main.py",
+            "repo:write:repo/infra/terraform",
+            "repo:write:repo/project-x/branches/agent-fix",
+            "repo:write:repo/project-x/main",
+            "search:query:web",
+            "storage:delete:bucket/backups/db.dump",
+            "storage:read:bucket/backups/db.dump"
+          ],
+          "max_hours": 2159.983
+        },
+        "workload_identity": {
+          "dls": 27.53,
+          "reach": 0.25,
+          "usable_targets": [
+            "docs:read:docs/alice/private/diary",
+            "docs:read:docs/alice/project-x/notes",
+            "docs:read:docs/alice/project-x/spec",
+            "docs:read:docs/bob/project-y/plan",
+            "docs:read:docs/finance/payroll",
+            "model:invoke:models/large",
+            "model:invoke:models/small",
+            "search:query:web"
+          ],
+          "max_hours": 0.983
+        },
+        "rfc8693_exchange": {
+          "dls": 1.67,
+          "reach": 0.4464,
+          "usable_targets": [
+            "docs:read:docs/alice/private/diary",
+            "docs:read:docs/alice/project-x/notes",
+            "docs:read:docs/alice/project-x/spec",
+            "docs:write:docs/alice/private/diary",
+            "docs:write:docs/alice/project-x/notes",
+            "mail:send:mail/external",
+            "mail:send:mail/internal",
+            "model:invoke:models/large",
+            "model:invoke:models/small",
+            "repo:read:repo/infra/terraform",
+            "repo:read:repo/project-x/README.md",
+            "repo:read:repo/project-x/src/main.py",
+            "repo:write:repo/project-x/branches/agent-fix",
+            "repo:write:repo/project-x/main",
+            "search:query:web"
+          ],
+          "max_hours": 0.033
+        },
+        "dac_no_attenuation": {
+          "dls": 0,
+          "reach": 0.0,
+          "usable_targets": [],
+          "max_hours": 0.0
+        },
+        "dac_bearer": {
+          "dls": 0.2,
+          "reach": 0.0536,
+          "usable_targets": [
+            "docs:read:docs/alice/project-x/notes",
+            "docs:read:docs/alice/project-x/spec",
+            "model:invoke:models/small",
+            "search:query:web"
+          ],
+          "max_hours": 0.033
+        },
+        "dac": {
+          "dls": 0,
+          "reach": 0.0,
+          "usable_targets": [],
+          "max_hours": 0.0
+        }
+      }
+    },
+    {
+      "id": "S12",
+      "family": "replay after revocation",
+      "title": "linter token stolen, parent (coder) revoked at 2 min",
+      "negative": false,
+      "models": {
+        "static_api_key": {
+          "dls": 241918.13,
+          "reach": 1.0,
+          "usable_targets": [
+            "docs:read:docs/alice/private/diary",
+            "docs:read:docs/alice/project-x/notes",
+            "docs:read:docs/alice/project-x/spec",
+            "docs:read:docs/bob/project-y/plan",
+            "docs:read:docs/finance/payroll",
+            "docs:write:docs/alice/private/diary",
+            "docs:write:docs/alice/project-x/notes",
+            "docs:write:docs/finance/payroll",
+            "mail:send:mail/external",
+            "mail:send:mail/internal",
+            "model:invoke:models/large",
+            "model:invoke:models/small",
+            "repo:admin:repo/project-x/settings",
+            "repo:read:repo/infra/terraform",
+            "repo:read:repo/project-x/README.md",
+            "repo:read:repo/project-x/src/main.py",
+            "repo:write:repo/infra/terraform",
+            "repo:write:repo/project-x/branches/agent-fix",
+            "repo:write:repo/project-x/main",
+            "search:query:web",
+            "storage:delete:bucket/backups/db.dump",
+            "storage:read:bucket/backups/db.dump"
+          ],
+          "max_hours": 2159.983
+        },
+        "workload_identity": {
+          "dls": 8.85,
+          "reach": 0.0804,
+          "usable_targets": [
+            "repo:read:repo/infra/terraform",
+            "repo:read:repo/project-x/README.md",
+            "repo:read:repo/project-x/src/main.py"
+          ],
+          "max_hours": 0.983
+        },
+        "rfc8693_exchange": {
+          "dls": 49.17,
+          "reach": 0.4464,
+          "usable_targets": [
+            "docs:read:docs/alice/private/diary",
+            "docs:read:docs/alice/project-x/notes",
+            "docs:read:docs/alice/project-x/spec",
+            "docs:write:docs/alice/private/diary",
+            "docs:write:docs/alice/project-x/notes",
+            "mail:send:mail/external",
+            "mail:send:mail/internal",
+            "model:invoke:models/large",
+            "model:invoke:models/small",
+            "repo:read:repo/infra/terraform",
+            "repo:read:repo/project-x/README.md",
+            "repo:read:repo/project-x/src/main.py",
+            "repo:write:repo/project-x/branches/agent-fix",
+            "repo:write:repo/project-x/main",
+            "search:query:web"
+          ],
+          "max_hours": 0.983
+        },
+        "dac_no_attenuation": {
+          "dls": 0,
+          "reach": 0.0,
+          "usable_targets": [],
+          "max_hours": 0.0
+        },
+        "dac_bearer": {
+          "dls": 0.03,
+          "reach": 0.0179,
+          "usable_targets": [
+            "repo:read:repo/project-x/src/main.py"
+          ],
+          "max_hours": 0.017
+        },
+        "dac": {
+          "dls": 0,
+          "reach": 0.0,
+          "usable_targets": [],
+          "max_hours": 0.0
+        }
+      }
+    },
+    {
+      "id": "S13",
+      "family": "replay after revocation",
+      "title": "researcher token stolen, policy version retired at 5 min",
+      "negative": false,
+      "models": {
+        "static_api_key": {
+          "dls": 241918.13,
+          "reach": 1.0,
+          "usable_targets": [
+            "docs:read:docs/alice/private/diary",
+            "docs:read:docs/alice/project-x/notes",
+            "docs:read:docs/alice/project-x/spec",
+            "docs:read:docs/bob/project-y/plan",
+            "docs:read:docs/finance/payroll",
+            "docs:write:docs/alice/private/diary",
+            "docs:write:docs/alice/project-x/notes",
+            "docs:write:docs/finance/payroll",
+            "mail:send:mail/external",
+            "mail:send:mail/internal",
+            "model:invoke:models/large",
+            "model:invoke:models/small",
+            "repo:admin:repo/project-x/settings",
+            "repo:read:repo/infra/terraform",
+            "repo:read:repo/project-x/README.md",
+            "repo:read:repo/project-x/src/main.py",
+            "repo:write:repo/infra/terraform",
+            "repo:write:repo/project-x/branches/agent-fix",
+            "repo:write:repo/project-x/main",
+            "search:query:web",
+            "storage:delete:bucket/backups/db.dump",
+            "storage:read:bucket/backups/db.dump"
+          ],
+          "max_hours": 2159.983
+        },
+        "workload_identity": {
+          "dls": 27.53,
+          "reach": 0.25,
+          "usable_targets": [
+            "docs:read:docs/alice/private/diary",
+            "docs:read:docs/alice/project-x/notes",
+            "docs:read:docs/alice/project-x/spec",
+            "docs:read:docs/bob/project-y/plan",
+            "docs:read:docs/finance/payroll",
+            "model:invoke:models/large",
+            "model:invoke:models/small",
+            "search:query:web"
+          ],
+          "max_hours": 0.983
+        },
+        "rfc8693_exchange": {
+          "dls": 49.17,
+          "reach": 0.4464,
+          "usable_targets": [
+            "docs:read:docs/alice/private/diary",
+            "docs:read:docs/alice/project-x/notes",
+            "docs:read:docs/alice/project-x/spec",
+            "docs:write:docs/alice/private/diary",
+            "docs:write:docs/alice/project-x/notes",
+            "mail:send:mail/external",
+            "mail:send:mail/internal",
+            "model:invoke:models/large",
+            "model:invoke:models/small",
+            "repo:read:repo/infra/terraform",
+            "repo:read:repo/project-x/README.md",
+            "repo:read:repo/project-x/src/main.py",
+            "repo:write:repo/project-x/branches/agent-fix",
+            "repo:write:repo/project-x/main",
+            "search:query:web"
+          ],
+          "max_hours": 0.983
+        },
+        "dac_no_attenuation": {
+          "dls": 0,
+          "reach": 0.0,
+          "usable_targets": [],
+          "max_hours": 0.0
+        },
+        "dac_bearer": {
+          "dls": 0.4,
+          "reach": 0.0536,
+          "usable_targets": [
+            "docs:read:docs/alice/project-x/notes",
+            "docs:read:docs/alice/project-x/spec",
+            "model:invoke:models/small",
+            "search:query:web"
+          ],
+          "max_hours": 0.067
+        },
+        "dac": {
+          "dls": 0,
+          "reach": 0.0,
+          "usable_targets": [],
+          "max_hours": 0.0
+        }
+      }
+    },
+    {
+      "id": "S14",
+      "family": "compromised sub-agent",
+      "title": "researcher workload compromised, detected after 4 h",
+      "negative": false,
+      "models": {
+        "static_api_key": {
+          "dls": 448.0,
+          "reach": 1.0,
+          "usable_targets": [
+            "docs:read:docs/alice/private/diary",
+            "docs:read:docs/alice/project-x/notes",
+            "docs:read:docs/alice/project-x/spec",
+            "docs:read:docs/bob/project-y/plan",
+            "docs:read:docs/finance/payroll",
+            "docs:write:docs/alice/private/diary",
+            "docs:write:docs/alice/project-x/notes",
+            "docs:write:docs/finance/payroll",
+            "mail:send:mail/external",
+            "mail:send:mail/internal",
+            "model:invoke:models/large",
+            "model:invoke:models/small",
+            "repo:admin:repo/project-x/settings",
+            "repo:read:repo/infra/terraform",
+            "repo:read:repo/project-x/README.md",
+            "repo:read:repo/project-x/src/main.py",
+            "repo:write:repo/infra/terraform",
+            "repo:write:repo/project-x/branches/agent-fix",
+            "repo:write:repo/project-x/main",
+            "search:query:web",
+            "storage:delete:bucket/backups/db.dump",
+            "storage:read:bucket/backups/db.dump"
+          ],
+          "max_hours": 4.0
+        },
+        "workload_identity": {
+          "dls": 139.99,
+          "reach": 0.25,
+          "usable_targets": [
+            "docs:read:docs/alice/private/diary",
+            "docs:read:docs/alice/project-x/notes",
+            "docs:read:docs/alice/project-x/spec",
+            "docs:read:docs/bob/project-y/plan",
+            "docs:read:docs/finance/payroll",
+            "model:invoke:models/large",
+            "model:invoke:models/small",
+            "search:query:web"
+          ],
+          "max_hours": 5.0
+        },
+        "rfc8693_exchange": {
+          "dls": 49.17,
+          "reach": 0.4464,
+          "usable_targets": [
+            "docs:read:docs/alice/private/diary",
+            "docs:read:docs/alice/project-x/notes",
+            "docs:read:docs/alice/project-x/spec",
+            "docs:write:docs/alice/private/diary",
+            "docs:write:docs/alice/project-x/notes",
+            "mail:send:mail/external",
+            "mail:send:mail/internal",
+            "model:invoke:models/large",
+            "model:invoke:models/small",
+            "repo:read:repo/infra/terraform",
+            "repo:read:repo/project-x/README.md",
+            "repo:read:repo/project-x/src/main.py",
+            "repo:write:repo/project-x/branches/agent-fix",
+            "repo:write:repo/project-x/main",
+            "search:query:web"
+          ],
+          "max_hours": 0.983
+        },
+        "dac_no_attenuation": {
+          "dls": 49.17,
+          "reach": 0.4464,
+          "usable_targets": [
+            "docs:read:docs/alice/private/diary",
+            "docs:read:docs/alice/project-x/notes",
+            "docs:read:docs/alice/project-x/spec",
+            "docs:write:docs/alice/private/diary",
+            "docs:write:docs/alice/project-x/notes",
+            "mail:send:mail/external",
+            "mail:send:mail/internal",
+            "model:invoke:models/large",
+            "model:invoke:models/small",
+            "repo:read:repo/infra/terraform",
+            "repo:read:repo/project-x/README.md",
+            "repo:read:repo/project-x/src/main.py",
+            "repo:write:repo/project-x/branches/agent-fix",
+            "repo:write:repo/project-x/main",
+            "search:query:web"
+          ],
+          "max_hours": 0.983
+        },
+        "dac_bearer": {
+          "dls": 0.9,
+          "reach": 0.0536,
+          "usable_targets": [
+            "docs:read:docs/alice/project-x/notes",
+            "docs:read:docs/alice/project-x/spec",
+            "model:invoke:models/small",
+            "search:query:web"
+          ],
+          "max_hours": 0.15
+        },
+        "dac": {
+          "dls": 0.9,
+          "reach": 0.0536,
+          "usable_targets": [
+            "docs:read:docs/alice/project-x/notes",
+            "docs:read:docs/alice/project-x/spec",
+            "model:invoke:models/small",
+            "search:query:web"
+          ],
+          "max_hours": 0.15
+        }
+      }
+    },
+    {
+      "id": "S15",
+      "family": "compromised sub-agent",
+      "title": "coder workload compromised, detected after 4 h",
+      "negative": false,
+      "models": {
+        "static_api_key": {
+          "dls": 448.0,
+          "reach": 1.0,
+          "usable_targets": [
+            "docs:read:docs/alice/private/diary",
+            "docs:read:docs/alice/project-x/notes",
+            "docs:read:docs/alice/project-x/spec",
+            "docs:read:docs/bob/project-y/plan",
+            "docs:read:docs/finance/payroll",
+            "docs:write:docs/alice/private/diary",
+            "docs:write:docs/alice/project-x/notes",
+            "docs:write:docs/finance/payroll",
+            "mail:send:mail/external",
+            "mail:send:mail/internal",
+            "model:invoke:models/large",
+            "model:invoke:models/small",
+            "repo:admin:repo/project-x/settings",
+            "repo:read:repo/infra/terraform",
+            "repo:read:repo/project-x/README.md",
+            "repo:read:repo/project-x/src/main.py",
+            "repo:write:repo/infra/terraform",
+            "repo:write:repo/project-x/branches/agent-fix",
+            "repo:write:repo/project-x/main",
+            "search:query:web",
+            "storage:delete:bucket/backups/db.dump",
+            "storage:read:bucket/backups/db.dump"
+          ],
+          "max_hours": 4.0
+        },
+        "workload_identity": {
+          "dls": 204.99,
+          "reach": 0.3661,
+          "usable_targets": [
+            "model:invoke:models/large",
+            "model:invoke:models/small",
+            "repo:admin:repo/project-x/settings",
+            "repo:read:repo/infra/terraform",
+            "repo:read:repo/project-x/README.md",
+            "repo:read:repo/project-x/src/main.py",
+            "repo:write:repo/infra/terraform",
+            "repo:write:repo/project-x/branches/agent-fix",
+            "repo:write:repo/project-x/main"
+          ],
+          "max_hours": 5.0
+        },
+        "rfc8693_exchange": {
+          "dls": 49.17,
+          "reach": 0.4464,
+          "usable_targets": [
+            "docs:read:docs/alice/private/diary",
+            "docs:read:docs/alice/project-x/notes",
+            "docs:read:docs/alice/project-x/spec",
+            "docs:write:docs/alice/private/diary",
+            "docs:write:docs/alice/project-x/notes",
+            "mail:send:mail/external",
+            "mail:send:mail/internal",
+            "model:invoke:models/large",
+            "model:invoke:models/small",
+            "repo:read:repo/infra/terraform",
+            "repo:read:repo/project-x/README.md",
+            "repo:read:repo/project-x/src/main.py",
+            "repo:write:repo/project-x/branches/agent-fix",
+            "repo:write:repo/project-x/main",
+            "search:query:web"
+          ],
+          "max_hours": 0.983
+        },
+        "dac_no_attenuation": {
+          "dls": 49.17,
+          "reach": 0.4464,
+          "usable_targets": [
+            "docs:read:docs/alice/private/diary",
+            "docs:read:docs/alice/project-x/notes",
+            "docs:read:docs/alice/project-x/spec",
+            "docs:write:docs/alice/private/diary",
+            "docs:write:docs/alice/project-x/notes",
+            "mail:send:mail/external",
+            "mail:send:mail/internal",
+            "model:invoke:models/large",
+            "model:invoke:models/small",
+            "repo:read:repo/infra/terraform",
+            "repo:read:repo/project-x/README.md",
+            "repo:read:repo/project-x/src/main.py",
+            "repo:write:repo/project-x/branches/agent-fix",
+            "repo:write:repo/project-x/main",
+            "search:query:web"
+          ],
+          "max_hours": 0.983
+        },
+        "dac_bearer": {
+          "dls": 1.87,
+          "reach": 0.0714,
+          "usable_targets": [
+            "model:invoke:models/large",
+            "repo:read:repo/project-x/README.md",
+            "repo:read:repo/project-x/src/main.py",
+            "repo:write:repo/project-x/branches/agent-fix"
+          ],
+          "max_hours": 0.233
+        },
+        "dac": {
+          "dls": 1.87,
+          "reach": 0.0714,
+          "usable_targets": [
+            "model:invoke:models/large",
+            "repo:read:repo/project-x/README.md",
+            "repo:read:repo/project-x/src/main.py",
+            "repo:write:repo/project-x/branches/agent-fix"
+          ],
+          "max_hours": 0.233
+        }
+      }
+    },
+    {
+      "id": "S16",
+      "family": "compromised sub-agent",
+      "title": "linter workload compromised, detected after 4 h",
+      "negative": false,
+      "models": {
+        "static_api_key": {
+          "dls": 448.0,
+          "reach": 1.0,
+          "usable_targets": [
+            "docs:read:docs/alice/private/diary",
+            "docs:read:docs/alice/project-x/notes",
+            "docs:read:docs/alice/project-x/spec",
+            "docs:read:docs/bob/project-y/plan",
+            "docs:read:docs/finance/payroll",
+            "docs:write:docs/alice/private/diary",
+            "docs:write:docs/alice/project-x/notes",
+            "docs:write:docs/finance/payroll",
+            "mail:send:mail/external",
+            "mail:send:mail/internal",
+            "model:invoke:models/large",
+            "model:invoke:models/small",
+            "repo:admin:repo/project-x/settings",
+            "repo:read:repo/infra/terraform",
+            "repo:read:repo/project-x/README.md",
+            "repo:read:repo/project-x/src/main.py",
+            "repo:write:repo/infra/terraform",
+            "repo:write:repo/project-x/branches/agent-fix",
+            "repo:write:repo/project-x/main",
+            "search:query:web",
+            "storage:delete:bucket/backups/db.dump",
+            "storage:read:bucket/backups/db.dump"
+          ],
+          "max_hours": 4.0
+        },
+        "workload_identity": {
+          "dls": 45.0,
+          "reach": 0.0804,
+          "usable_targets": [
+            "repo:read:repo/infra/terraform",
+            "repo:read:repo/project-x/README.md",
+            "repo:read:repo/project-x/src/main.py"
+          ],
+          "max_hours": 5.0
+        },
+        "rfc8693_exchange": {
+          "dls": 49.17,
+          "reach": 0.4464,
+          "usable_targets": [
+            "docs:read:docs/alice/private/diary",
+            "docs:read:docs/alice/project-x/notes",
+            "docs:read:docs/alice/project-x/spec",
+            "docs:write:docs/alice/private/diary",
+            "docs:write:docs/alice/project-x/notes",
+            "mail:send:mail/external",
+            "mail:send:mail/internal",
+            "model:invoke:models/large",
+            "model:invoke:models/small",
+            "repo:read:repo/infra/terraform",
+            "repo:read:repo/project-x/README.md",
+            "repo:read:repo/project-x/src/main.py",
+            "repo:write:repo/project-x/branches/agent-fix",
+            "repo:write:repo/project-x/main",
+            "search:query:web"
+          ],
+          "max_hours": 0.983
+        },
+        "dac_no_attenuation": {
+          "dls": 49.17,
+          "reach": 0.4464,
+          "usable_targets": [
+            "docs:read:docs/alice/private/diary",
+            "docs:read:docs/alice/project-x/notes",
+            "docs:read:docs/alice/project-x/spec",
+            "docs:write:docs/alice/private/diary",
+            "docs:write:docs/alice/project-x/notes",
+            "mail:send:mail/external",
+            "mail:send:mail/internal",
+            "model:invoke:models/large",
+            "model:invoke:models/small",
+            "repo:read:repo/infra/terraform",
+            "repo:read:repo/project-x/README.md",
+            "repo:read:repo/project-x/src/main.py",
+            "repo:write:repo/project-x/branches/agent-fix",
+            "repo:write:repo/project-x/main",
+            "search:query:web"
+          ],
+          "max_hours": 0.983
+        },
+        "dac_bearer": {
+          "dls": 0.13,
+          "reach": 0.0179,
+          "usable_targets": [
+            "repo:read:repo/project-x/src/main.py"
+          ],
+          "max_hours": 0.067
+        },
+        "dac": {
+          "dls": 0.13,
+          "reach": 0.0179,
+          "usable_targets": [
+            "repo:read:repo/project-x/src/main.py"
+          ],
+          "max_hours": 0.067
+        }
+      }
+    },
+    {
+      "id": "S17",
+      "family": "compromised sub-agent",
+      "title": "researcher workload compromised, never detected",
+      "negative": false,
+      "models": {
+        "static_api_key": {
+          "dls": 241918.13,
+          "reach": 1.0,
+          "usable_targets": [
+            "docs:read:docs/alice/private/diary",
+            "docs:read:docs/alice/project-x/notes",
+            "docs:read:docs/alice/project-x/spec",
+            "docs:read:docs/bob/project-y/plan",
+            "docs:read:docs/finance/payroll",
+            "docs:write:docs/alice/private/diary",
+            "docs:write:docs/alice/project-x/notes",
+            "docs:write:docs/finance/payroll",
+            "mail:send:mail/external",
+            "mail:send:mail/internal",
+            "model:invoke:models/large",
+            "model:invoke:models/small",
+            "repo:admin:repo/project-x/settings",
+            "repo:read:repo/infra/terraform",
+            "repo:read:repo/project-x/README.md",
+            "repo:read:repo/project-x/src/main.py",
+            "repo:write:repo/infra/terraform",
+            "repo:write:repo/project-x/branches/agent-fix",
+            "repo:write:repo/project-x/main",
+            "search:query:web",
+            "storage:delete:bucket/backups/db.dump",
+            "storage:read:bucket/backups/db.dump"
+          ],
+          "max_hours": 2159.983
+        },
+        "workload_identity": {
+          "dls": 60479.53,
+          "reach": 0.25,
+          "usable_targets": [
+            "docs:read:docs/alice/private/diary",
+            "docs:read:docs/alice/project-x/notes",
+            "docs:read:docs/alice/project-x/spec",
+            "docs:read:docs/bob/project-y/plan",
+            "docs:read:docs/finance/payroll",
+            "model:invoke:models/large",
+            "model:invoke:models/small",
+            "search:query:web"
+          ],
+          "max_hours": 2159.983
+        },
+        "rfc8693_exchange": {
+          "dls": 49.17,
+          "reach": 0.4464,
+          "usable_targets": [
+            "docs:read:docs/alice/private/diary",
+            "docs:read:docs/alice/project-x/notes",
+            "docs:read:docs/alice/project-x/spec",
+            "docs:write:docs/alice/private/diary",
+            "docs:write:docs/alice/project-x/notes",
+            "mail:send:mail/external",
+            "mail:send:mail/internal",
+            "model:invoke:models/large",
+            "model:invoke:models/small",
+            "repo:read:repo/infra/terraform",
+            "repo:read:repo/project-x/README.md",
+            "repo:read:repo/project-x/src/main.py",
+            "repo:write:repo/project-x/branches/agent-fix",
+            "repo:write:repo/project-x/main",
+            "search:query:web"
+          ],
+          "max_hours": 0.983
+        },
+        "dac_no_attenuation": {
+          "dls": 49.17,
+          "reach": 0.4464,
+          "usable_targets": [
+            "docs:read:docs/alice/private/diary",
+            "docs:read:docs/alice/project-x/notes",
+            "docs:read:docs/alice/project-x/spec",
+            "docs:write:docs/alice/private/diary",
+            "docs:write:docs/alice/project-x/notes",
+            "mail:send:mail/external",
+            "mail:send:mail/internal",
+            "model:invoke:models/large",
+            "model:invoke:models/small",
+            "repo:read:repo/infra/terraform",
+            "repo:read:repo/project-x/README.md",
+            "repo:read:repo/project-x/src/main.py",
+            "repo:write:repo/project-x/branches/agent-fix",
+            "repo:write:repo/project-x/main",
+            "search:query:web"
+          ],
+          "max_hours": 0.983
+        },
+        "dac_bearer": {
+          "dls": 0.9,
+          "reach": 0.0536,
+          "usable_targets": [
+            "docs:read:docs/alice/project-x/notes",
+            "docs:read:docs/alice/project-x/spec",
+            "model:invoke:models/small",
+            "search:query:web"
+          ],
+          "max_hours": 0.15
+        },
+        "dac": {
+          "dls": 0.9,
+          "reach": 0.0536,
+          "usable_targets": [
+            "docs:read:docs/alice/project-x/notes",
+            "docs:read:docs/alice/project-x/spec",
+            "model:invoke:models/small",
+            "search:query:web"
+          ],
+          "max_hours": 0.15
+        }
+      }
+    },
+    {
+      "id": "S18",
+      "family": "confused deputy",
+      "title": "prompt-injected researcher steered for 10 min (no exfiltration)",
+      "negative": false,
+      "models": {
+        "static_api_key": {
+          "dls": 18.67,
+          "reach": 1.0,
+          "usable_targets": [
+            "docs:read:docs/alice/private/diary",
+            "docs:read:docs/alice/project-x/notes",
+            "docs:read:docs/alice/project-x/spec",
+            "docs:read:docs/bob/project-y/plan",
+            "docs:read:docs/finance/payroll",
+            "docs:write:docs/alice/private/diary",
+            "docs:write:docs/alice/project-x/notes",
+            "docs:write:docs/finance/payroll",
+            "mail:send:mail/external",
+            "mail:send:mail/internal",
+            "model:invoke:models/large",
+            "model:invoke:models/small",
+            "repo:admin:repo/project-x/settings",
+            "repo:read:repo/infra/terraform",
+            "repo:read:repo/project-x/README.md",
+            "repo:read:repo/project-x/src/main.py",
+            "repo:write:repo/infra/terraform",
+            "repo:write:repo/project-x/branches/agent-fix",
+            "repo:write:repo/project-x/main",
+            "search:query:web",
+            "storage:delete:bucket/backups/db.dump",
+            "storage:read:bucket/backups/db.dump"
+          ],
+          "max_hours": 0.167
+        },
+        "workload_identity": {
+          "dls": 4.67,
+          "reach": 0.25,
+          "usable_targets": [
+            "docs:read:docs/alice/private/diary",
+            "docs:read:docs/alice/project-x/notes",
+            "docs:read:docs/alice/project-x/spec",
+            "docs:read:docs/bob/project-y/plan",
+            "docs:read:docs/finance/payroll",
+            "model:invoke:models/large",
+            "model:invoke:models/small",
+            "search:query:web"
+          ],
+          "max_hours": 0.167
+        },
+        "rfc8693_exchange": {
+          "dls": 8.33,
+          "reach": 0.4464,
+          "usable_targets": [
+            "docs:read:docs/alice/private/diary",
+            "docs:read:docs/alice/project-x/notes",
+            "docs:read:docs/alice/project-x/spec",
+            "docs:write:docs/alice/private/diary",
+            "docs:write:docs/alice/project-x/notes",
+            "mail:send:mail/external",
+            "mail:send:mail/internal",
+            "model:invoke:models/large",
+            "model:invoke:models/small",
+            "repo:read:repo/infra/terraform",
+            "repo:read:repo/project-x/README.md",
+            "repo:read:repo/project-x/src/main.py",
+            "repo:write:repo/project-x/branches/agent-fix",
+            "repo:write:repo/project-x/main",
+            "search:query:web"
+          ],
+          "max_hours": 0.167
+        },
+        "dac_no_attenuation": {
+          "dls": 8.33,
+          "reach": 0.4464,
+          "usable_targets": [
+            "docs:read:docs/alice/private/diary",
+            "docs:read:docs/alice/project-x/notes",
+            "docs:read:docs/alice/project-x/spec",
+            "docs:write:docs/alice/private/diary",
+            "docs:write:docs/alice/project-x/notes",
+            "mail:send:mail/external",
+            "mail:send:mail/internal",
+            "model:invoke:models/large",
+            "model:invoke:models/small",
+            "repo:read:repo/infra/terraform",
+            "repo:read:repo/project-x/README.md",
+            "repo:read:repo/project-x/src/main.py",
+            "repo:write:repo/project-x/branches/agent-fix",
+            "repo:write:repo/project-x/main",
+            "search:query:web"
+          ],
+          "max_hours": 0.167
+        },
+        "dac_bearer": {
+          "dls": 0.9,
+          "reach": 0.0536,
+          "usable_targets": [
+            "docs:read:docs/alice/project-x/notes",
+            "docs:read:docs/alice/project-x/spec",
+            "model:invoke:models/small",
+            "search:query:web"
+          ],
+          "max_hours": 0.15
+        },
+        "dac": {
+          "dls": 0.9,
+          "reach": 0.0536,
+          "usable_targets": [
+            "docs:read:docs/alice/project-x/notes",
+            "docs:read:docs/alice/project-x/spec",
+            "model:invoke:models/small",
+            "search:query:web"
+          ],
+          "max_hours": 0.15
+        }
+      }
+    },
+    {
+      "id": "S19",
+      "family": "confused deputy",
+      "title": "prompt-injected coder steered for 10 min (no exfiltration)",
+      "negative": false,
+      "models": {
+        "static_api_key": {
+          "dls": 18.67,
+          "reach": 1.0,
+          "usable_targets": [
+            "docs:read:docs/alice/private/diary",
+            "docs:read:docs/alice/project-x/notes",
+            "docs:read:docs/alice/project-x/spec",
+            "docs:read:docs/bob/project-y/plan",
+            "docs:read:docs/finance/payroll",
+            "docs:write:docs/alice/private/diary",
+            "docs:write:docs/alice/project-x/notes",
+            "docs:write:docs/finance/payroll",
+            "mail:send:mail/external",
+            "mail:send:mail/internal",
+            "model:invoke:models/large",
+            "model:invoke:models/small",
+            "repo:admin:repo/project-x/settings",
+            "repo:read:repo/infra/terraform",
+            "repo:read:repo/project-x/README.md",
+            "repo:read:repo/project-x/src/main.py",
+            "repo:write:repo/infra/terraform",
+            "repo:write:repo/project-x/branches/agent-fix",
+            "repo:write:repo/project-x/main",
+            "search:query:web",
+            "storage:delete:bucket/backups/db.dump",
+            "storage:read:bucket/backups/db.dump"
+          ],
+          "max_hours": 0.167
+        },
+        "workload_identity": {
+          "dls": 6.83,
+          "reach": 0.3661,
+          "usable_targets": [
+            "model:invoke:models/large",
+            "model:invoke:models/small",
+            "repo:admin:repo/project-x/settings",
+            "repo:read:repo/infra/terraform",
+            "repo:read:repo/project-x/README.md",
+            "repo:read:repo/project-x/src/main.py",
+            "repo:write:repo/infra/terraform",
+            "repo:write:repo/project-x/branches/agent-fix",
+            "repo:write:repo/project-x/main"
+          ],
+          "max_hours": 0.167
+        },
+        "rfc8693_exchange": {
+          "dls": 8.33,
+          "reach": 0.4464,
+          "usable_targets": [
+            "docs:read:docs/alice/private/diary",
+            "docs:read:docs/alice/project-x/notes",
+            "docs:read:docs/alice/project-x/spec",
+            "docs:write:docs/alice/private/diary",
+            "docs:write:docs/alice/project-x/notes",
+            "mail:send:mail/external",
+            "mail:send:mail/internal",
+            "model:invoke:models/large",
+            "model:invoke:models/small",
+            "repo:read:repo/infra/terraform",
+            "repo:read:repo/project-x/README.md",
+            "repo:read:repo/project-x/src/main.py",
+            "repo:write:repo/project-x/branches/agent-fix",
+            "repo:write:repo/project-x/main",
+            "search:query:web"
+          ],
+          "max_hours": 0.167
+        },
+        "dac_no_attenuation": {
+          "dls": 8.33,
+          "reach": 0.4464,
+          "usable_targets": [
+            "docs:read:docs/alice/private/diary",
+            "docs:read:docs/alice/project-x/notes",
+            "docs:read:docs/alice/project-x/spec",
+            "docs:write:docs/alice/private/diary",
+            "docs:write:docs/alice/project-x/notes",
+            "mail:send:mail/external",
+            "mail:send:mail/internal",
+            "model:invoke:models/large",
+            "model:invoke:models/small",
+            "repo:read:repo/infra/terraform",
+            "repo:read:repo/project-x/README.md",
+            "repo:read:repo/project-x/src/main.py",
+            "repo:write:repo/project-x/branches/agent-fix",
+            "repo:write:repo/project-x/main",
+            "search:query:web"
+          ],
+          "max_hours": 0.167
+        },
+        "dac_bearer": {
+          "dls": 1.33,
+          "reach": 0.0714,
+          "usable_targets": [
+            "model:invoke:models/large",
+            "repo:read:repo/project-x/README.md",
+            "repo:read:repo/project-x/src/main.py",
+            "repo:write:repo/project-x/branches/agent-fix"
+          ],
+          "max_hours": 0.167
+        },
+        "dac": {
+          "dls": 1.33,
+          "reach": 0.0714,
+          "usable_targets": [
+            "model:invoke:models/large",
+            "repo:read:repo/project-x/README.md",
+            "repo:read:repo/project-x/src/main.py",
+            "repo:write:repo/project-x/branches/agent-fix"
+          ],
+          "max_hours": 0.167
+        }
+      }
+    },
+    {
+      "id": "S20",
+      "family": "over-broad delegation",
+      "title": "linter key + token exfiltrated; attacker widens scope and extends lifetime",
+      "negative": false,
+      "models": {
+        "static_api_key": {
+          "dls": 241918.13,
+          "reach": 1.0,
+          "usable_targets": [
+            "docs:read:docs/alice/private/diary",
+            "docs:read:docs/alice/project-x/notes",
+            "docs:read:docs/alice/project-x/spec",
+            "docs:read:docs/bob/project-y/plan",
+            "docs:read:docs/finance/payroll",
+            "docs:write:docs/alice/private/diary",
+            "docs:write:docs/alice/project-x/notes",
+            "docs:write:docs/finance/payroll",
+            "mail:send:mail/external",
+            "mail:send:mail/internal",
+            "model:invoke:models/large",
+            "model:invoke:models/small",
+            "repo:admin:repo/project-x/settings",
+            "repo:read:repo/infra/terraform",
+            "repo:read:repo/project-x/README.md",
+            "repo:read:repo/project-x/src/main.py",
+            "repo:write:repo/infra/terraform",
+            "repo:write:repo/project-x/branches/agent-fix",
+            "repo:write:repo/project-x/main",
+            "search:query:web",
+            "storage:delete:bucket/backups/db.dump",
+            "storage:read:bucket/backups/db.dump"
+          ],
+          "max_hours": 2159.983
+        },
+        "workload_identity": {
+          "dls": 8.85,
+          "reach": 0.0804,
+          "usable_targets": [
+            "repo:read:repo/infra/terraform",
+            "repo:read:repo/project-x/README.md",
+            "repo:read:repo/project-x/src/main.py"
+          ],
+          "max_hours": 0.983
+        },
+        "rfc8693_exchange": {
+          "dls": 49.17,
+          "reach": 0.4464,
+          "usable_targets": [
+            "docs:read:docs/alice/private/diary",
+            "docs:read:docs/alice/project-x/notes",
+            "docs:read:docs/alice/project-x/spec",
+            "docs:write:docs/alice/private/diary",
+            "docs:write:docs/alice/project-x/notes",
+            "mail:send:mail/external",
+            "mail:send:mail/internal",
+            "model:invoke:models/large",
+            "model:invoke:models/small",
+            "repo:read:repo/infra/terraform",
+            "repo:read:repo/project-x/README.md",
+            "repo:read:repo/project-x/src/main.py",
+            "repo:write:repo/project-x/branches/agent-fix",
+            "repo:write:repo/project-x/main",
+            "search:query:web"
+          ],
+          "max_hours": 0.983
+        },
+        "dac_no_attenuation": {
+          "dls": 49.17,
+          "reach": 0.4464,
+          "usable_targets": [
+            "docs:read:docs/alice/private/diary",
+            "docs:read:docs/alice/project-x/notes",
+            "docs:read:docs/alice/project-x/spec",
+            "docs:write:docs/alice/private/diary",
+            "docs:write:docs/alice/project-x/notes",
+            "mail:send:mail/external",
+            "mail:send:mail/internal",
+            "model:invoke:models/large",
+            "model:invoke:models/small",
+            "repo:read:repo/infra/terraform",
+            "repo:read:repo/project-x/README.md",
+            "repo:read:repo/project-x/src/main.py",
+            "repo:write:repo/project-x/branches/agent-fix",
+            "repo:write:repo/project-x/main",
+            "search:query:web"
+          ],
+          "max_hours": 0.983
+        },
+        "dac_bearer": {
+          "dls": 0.13,
+          "reach": 0.0179,
+          "usable_targets": [
+            "repo:read:repo/project-x/src/main.py"
+          ],
+          "max_hours": 0.067
+        },
+        "dac": {
+          "dls": 0.13,
+          "reach": 0.0179,
+          "usable_targets": [
+            "repo:read:repo/project-x/src/main.py"
+          ],
+          "max_hours": 0.067
+        }
+      }
+    },
+    {
+      "id": "S21",
+      "family": "over-broad delegation",
+      "title": "researcher key + token exfiltrated; attacker widens scope and extends lifetime",
+      "negative": false,
+      "models": {
+        "static_api_key": {
+          "dls": 241918.13,
+          "reach": 1.0,
+          "usable_targets": [
+            "docs:read:docs/alice/private/diary",
+            "docs:read:docs/alice/project-x/notes",
+            "docs:read:docs/alice/project-x/spec",
+            "docs:read:docs/bob/project-y/plan",
+            "docs:read:docs/finance/payroll",
+            "docs:write:docs/alice/private/diary",
+            "docs:write:docs/alice/project-x/notes",
+            "docs:write:docs/finance/payroll",
+            "mail:send:mail/external",
+            "mail:send:mail/internal",
+            "model:invoke:models/large",
+            "model:invoke:models/small",
+            "repo:admin:repo/project-x/settings",
+            "repo:read:repo/infra/terraform",
+            "repo:read:repo/project-x/README.md",
+            "repo:read:repo/project-x/src/main.py",
+            "repo:write:repo/infra/terraform",
+            "repo:write:repo/project-x/branches/agent-fix",
+            "repo:write:repo/project-x/main",
+            "search:query:web",
+            "storage:delete:bucket/backups/db.dump",
+            "storage:read:bucket/backups/db.dump"
+          ],
+          "max_hours": 2159.983
+        },
+        "workload_identity": {
+          "dls": 27.53,
+          "reach": 0.25,
+          "usable_targets": [
+            "docs:read:docs/alice/private/diary",
+            "docs:read:docs/alice/project-x/notes",
+            "docs:read:docs/alice/project-x/spec",
+            "docs:read:docs/bob/project-y/plan",
+            "docs:read:docs/finance/payroll",
+            "model:invoke:models/large",
+            "model:invoke:models/small",
+            "search:query:web"
+          ],
+          "max_hours": 0.983
+        },
+        "rfc8693_exchange": {
+          "dls": 49.17,
+          "reach": 0.4464,
+          "usable_targets": [
+            "docs:read:docs/alice/private/diary",
+            "docs:read:docs/alice/project-x/notes",
+            "docs:read:docs/alice/project-x/spec",
+            "docs:write:docs/alice/private/diary",
+            "docs:write:docs/alice/project-x/notes",
+            "mail:send:mail/external",
+            "mail:send:mail/internal",
+            "model:invoke:models/large",
+            "model:invoke:models/small",
+            "repo:read:repo/infra/terraform",
+            "repo:read:repo/project-x/README.md",
+            "repo:read:repo/project-x/src/main.py",
+            "repo:write:repo/project-x/branches/agent-fix",
+            "repo:write:repo/project-x/main",
+            "search:query:web"
+          ],
+          "max_hours": 0.983
+        },
+        "dac_no_attenuation": {
+          "dls": 49.17,
+          "reach": 0.4464,
+          "usable_targets": [
+            "docs:read:docs/alice/private/diary",
+            "docs:read:docs/alice/project-x/notes",
+            "docs:read:docs/alice/project-x/spec",
+            "docs:write:docs/alice/private/diary",
+            "docs:write:docs/alice/project-x/notes",
+            "mail:send:mail/external",
+            "mail:send:mail/internal",
+            "model:invoke:models/large",
+            "model:invoke:models/small",
+            "repo:read:repo/infra/terraform",
+            "repo:read:repo/project-x/README.md",
+            "repo:read:repo/project-x/src/main.py",
+            "repo:write:repo/project-x/branches/agent-fix",
+            "repo:write:repo/project-x/main",
+            "search:query:web"
+          ],
+          "max_hours": 0.983
+        },
+        "dac_bearer": {
+          "dls": 0.9,
+          "reach": 0.0536,
+          "usable_targets": [
+            "docs:read:docs/alice/project-x/notes",
+            "docs:read:docs/alice/project-x/spec",
+            "model:invoke:models/small",
+            "search:query:web"
+          ],
+          "max_hours": 0.15
+        },
+        "dac": {
+          "dls": 0.9,
+          "reach": 0.0536,
+          "usable_targets": [
+            "docs:read:docs/alice/project-x/notes",
+            "docs:read:docs/alice/project-x/spec",
+            "model:invoke:models/small",
+            "search:query:web"
+          ],
+          "max_hours": 0.15
+        }
+      }
+    },
+    {
+      "id": "S22",
+      "family": "wrong environment",
+      "title": "staging planner + coder tokens replayed against prod tools",
+      "negative": false,
+      "models": {
+        "static_api_key": {
+          "dls": 241918.13,
+          "reach": 1.0,
+          "usable_targets": [
+            "docs:read:docs/alice/private/diary",
+            "docs:read:docs/alice/project-x/notes",
+            "docs:read:docs/alice/project-x/spec",
+            "docs:read:docs/bob/project-y/plan",
+            "docs:read:docs/finance/payroll",
+            "docs:write:docs/alice/private/diary",
+            "docs:write:docs/alice/project-x/notes",
+            "docs:write:docs/finance/payroll",
+            "mail:send:mail/external",
+            "mail:send:mail/internal",
+            "model:invoke:models/large",
+            "model:invoke:models/small",
+            "repo:admin:repo/project-x/settings",
+            "repo:read:repo/infra/terraform",
+            "repo:read:repo/project-x/README.md",
+            "repo:read:repo/project-x/src/main.py",
+            "repo:write:repo/infra/terraform",
+            "repo:write:repo/project-x/branches/agent-fix",
+            "repo:write:repo/project-x/main",
+            "search:query:web",
+            "storage:delete:bucket/backups/db.dump",
+            "storage:read:bucket/backups/db.dump"
+          ],
+          "max_hours": 2159.983
+        },
+        "workload_identity": {
+          "dls": 92.43,
+          "reach": 0.8393,
+          "usable_targets": [
+            "docs:read:docs/alice/private/diary",
+            "docs:read:docs/alice/project-x/notes",
+            "docs:read:docs/alice/project-x/spec",
+            "docs:read:docs/bob/project-y/plan",
+            "docs:read:docs/finance/payroll",
+            "docs:write:docs/alice/private/diary",
+            "docs:write:docs/alice/project-x/notes",
+            "docs:write:docs/finance/payroll",
+            "mail:send:mail/external",
+            "mail:send:mail/internal",
+            "model:invoke:models/large",
+            "model:invoke:models/small",
+            "repo:admin:repo/project-x/settings",
+            "repo:read:repo/infra/terraform",
+            "repo:read:repo/project-x/README.md",
+            "repo:read:repo/project-x/src/main.py",
+            "repo:write:repo/infra/terraform",
+            "repo:write:repo/project-x/branches/agent-fix",
+            "repo:write:repo/project-x/main",
+            "search:query:web"
+          ],
+          "max_hours": 0.983
+        },
+        "rfc8693_exchange": {
+          "dls": 49.17,
+          "reach": 0.4464,
+          "usable_targets": [
+            "docs:read:docs/alice/private/diary",
+            "docs:read:docs/alice/project-x/notes",
+            "docs:read:docs/alice/project-x/spec",
+            "docs:write:docs/alice/private/diary",
+            "docs:write:docs/alice/project-x/notes",
+            "mail:send:mail/external",
+            "mail:send:mail/internal",
+            "model:invoke:models/large",
+            "model:invoke:models/small",
+            "repo:read:repo/infra/terraform",
+            "repo:read:repo/project-x/README.md",
+            "repo:read:repo/project-x/src/main.py",
+            "repo:write:repo/project-x/branches/agent-fix",
+            "repo:write:repo/project-x/main",
+            "search:query:web"
+          ],
+          "max_hours": 0.983
+        },
+        "dac_no_attenuation": {
+          "dls": 0,
+          "reach": 0.0,
+          "usable_targets": [],
+          "max_hours": 0.0
+        },
+        "dac_bearer": {
+          "dls": 0,
+          "reach": 0.0,
+          "usable_targets": [],
+          "max_hours": 0.0
+        },
+        "dac": {
+          "dls": 0,
+          "reach": 0.0,
+          "usable_targets": [],
+          "max_hours": 0.0
+        }
+      }
+    },
+    {
+      "id": "S23",
+      "family": "issuer compromise",
+      "title": "gcp.sim trust-domain signing key stolen",
+      "negative": false,
+      "models": {
+        "static_api_key": {
+          "dls": 0,
+          "reach": 0.0,
+          "usable_targets": [],
+          "max_hours": 0.0
+        },
+        "workload_identity": {
+          "dls": 88559.32,
+          "reach": 0.3661,
+          "usable_targets": [
+            "model:invoke:models/large",
+            "model:invoke:models/small",
+            "repo:admin:repo/project-x/settings",
+            "repo:read:repo/infra/terraform",
+            "repo:read:repo/project-x/README.md",
+            "repo:read:repo/project-x/src/main.py",
+            "repo:write:repo/infra/terraform",
+            "repo:write:repo/project-x/branches/agent-fix",
+            "repo:write:repo/project-x/main"
+          ],
+          "max_hours": 2159.983
+        },
+        "rfc8693_exchange": {
+          "dls": 0,
+          "reach": 0.0,
+          "usable_targets": [],
+          "max_hours": 0.0
+        },
+        "dac_no_attenuation": {
+          "dls": 0,
+          "reach": 0.0,
+          "usable_targets": [],
+          "max_hours": 0.0
+        },
+        "dac_bearer": {
+          "dls": 0,
+          "reach": 0.0,
+          "usable_targets": [],
+          "max_hours": 0.0
+        },
+        "dac": {
+          "dls": 0,
+          "reach": 0.0,
+          "usable_targets": [],
+          "max_hours": 0.0
+        }
+      }
+    },
+    {
+      "id": "S24",
+      "family": "issuer compromise",
+      "title": "delegation gateway / authorization server signing key stolen",
+      "negative": false,
+      "models": {
+        "static_api_key": {
+          "dls": 0,
+          "reach": 0.0,
+          "usable_targets": [],
+          "max_hours": 0.0
+        },
+        "workload_identity": {
+          "dls": 0,
+          "reach": 0.0,
+          "usable_targets": [],
+          "max_hours": 0.0
+        },
+        "rfc8693_exchange": {
+          "dls": 241918.13,
+          "reach": 1.0,
+          "usable_targets": [
+            "docs:read:docs/alice/private/diary",
+            "docs:read:docs/alice/project-x/notes",
+            "docs:read:docs/alice/project-x/spec",
+            "docs:read:docs/bob/project-y/plan",
+            "docs:read:docs/finance/payroll",
+            "docs:write:docs/alice/private/diary",
+            "docs:write:docs/alice/project-x/notes",
+            "docs:write:docs/finance/payroll",
+            "mail:send:mail/external",
+            "mail:send:mail/internal",
+            "model:invoke:models/large",
+            "model:invoke:models/small",
+            "repo:admin:repo/project-x/settings",
+            "repo:read:repo/infra/terraform",
+            "repo:read:repo/project-x/README.md",
+            "repo:read:repo/project-x/src/main.py",
+            "repo:write:repo/infra/terraform",
+            "repo:write:repo/project-x/branches/agent-fix",
+            "repo:write:repo/project-x/main",
+            "search:query:web",
+            "storage:delete:bucket/backups/db.dump",
+            "storage:read:bucket/backups/db.dump"
+          ],
+          "max_hours": 2159.983
+        },
+        "dac_no_attenuation": {
+          "dls": 0,
+          "reach": 0.0,
+          "usable_targets": [],
+          "max_hours": 0.0
+        },
+        "dac_bearer": {
+          "dls": 0,
+          "reach": 0.0,
+          "usable_targets": [],
+          "max_hours": 0.0
+        },
+        "dac": {
+          "dls": 0,
+          "reach": 0.0,
+          "usable_targets": [],
+          "max_hours": 0.0
+        }
+      }
+    },
+    {
+      "id": "S25",
+      "family": "forgery",
+      "title": "outsider self-signs tokens claiming to be the planner",
+      "negative": false,
+      "models": {
+        "static_api_key": {
+          "dls": 0,
+          "reach": 0.0,
+          "usable_targets": [],
+          "max_hours": 0.0
+        },
+        "workload_identity": {
+          "dls": 0,
+          "reach": 0.0,
+          "usable_targets": [],
+          "max_hours": 0.0
+        },
+        "rfc8693_exchange": {
+          "dls": 0,
+          "reach": 0.0,
+          "usable_targets": [],
+          "max_hours": 0.0
+        },
+        "dac_no_attenuation": {
+          "dls": 0,
+          "reach": 0.0,
+          "usable_targets": [],
+          "max_hours": 0.0
+        },
+        "dac_bearer": {
+          "dls": 0,
+          "reach": 0.0,
+          "usable_targets": [],
+          "max_hours": 0.0
+        },
+        "dac": {
+          "dls": 0,
+          "reach": 0.0,
+          "usable_targets": [],
+          "max_hours": 0.0
+        }
+      }
+    },
+    {
+      "id": "S26",
+      "family": "negative case",
+      "title": "root workload (planner) compromised while its credential is valid, detected after 4 h",
+      "negative": true,
+      "models": {
+        "static_api_key": {
+          "dls": 448.0,
+          "reach": 1.0,
+          "usable_targets": [
+            "docs:read:docs/alice/private/diary",
+            "docs:read:docs/alice/project-x/notes",
+            "docs:read:docs/alice/project-x/spec",
+            "docs:read:docs/bob/project-y/plan",
+            "docs:read:docs/finance/payroll",
+            "docs:write:docs/alice/private/diary",
+            "docs:write:docs/alice/project-x/notes",
+            "docs:write:docs/finance/payroll",
+            "mail:send:mail/external",
+            "mail:send:mail/internal",
+            "model:invoke:models/large",
+            "model:invoke:models/small",
+            "repo:admin:repo/project-x/settings",
+            "repo:read:repo/infra/terraform",
+            "repo:read:repo/project-x/README.md",
+            "repo:read:repo/project-x/src/main.py",
+            "repo:write:repo/infra/terraform",
+            "repo:write:repo/project-x/branches/agent-fix",
+            "repo:write:repo/project-x/main",
+            "search:query:web",
+            "storage:delete:bucket/backups/db.dump",
+            "storage:read:bucket/backups/db.dump"
+          ],
+          "max_hours": 4.0
+        },
+        "workload_identity": {
+          "dls": 469.97,
+          "reach": 0.8393,
+          "usable_targets": [
+            "docs:read:docs/alice/private/diary",
+            "docs:read:docs/alice/project-x/notes",
+            "docs:read:docs/alice/project-x/spec",
+            "docs:read:docs/bob/project-y/plan",
+            "docs:read:docs/finance/payroll",
+            "docs:write:docs/alice/private/diary",
+            "docs:write:docs/alice/project-x/notes",
+            "docs:write:docs/finance/payroll",
+            "mail:send:mail/external",
+            "mail:send:mail/internal",
+            "model:invoke:models/large",
+            "model:invoke:models/small",
+            "repo:admin:repo/project-x/settings",
+            "repo:read:repo/infra/terraform",
+            "repo:read:repo/project-x/README.md",
+            "repo:read:repo/project-x/src/main.py",
+            "repo:write:repo/infra/terraform",
+            "repo:write:repo/project-x/branches/agent-fix",
+            "repo:write:repo/project-x/main",
+            "search:query:web"
+          ],
+          "max_hours": 5.0
+        },
+        "rfc8693_exchange": {
+          "dls": 200.0,
+          "reach": 0.4464,
+          "usable_targets": [
+            "docs:read:docs/alice/private/diary",
+            "docs:read:docs/alice/project-x/notes",
+            "docs:read:docs/alice/project-x/spec",
+            "docs:write:docs/alice/private/diary",
+            "docs:write:docs/alice/project-x/notes",
+            "mail:send:mail/external",
+            "mail:send:mail/internal",
+            "model:invoke:models/large",
+            "model:invoke:models/small",
+            "repo:read:repo/infra/terraform",
+            "repo:read:repo/project-x/README.md",
+            "repo:read:repo/project-x/src/main.py",
+            "repo:write:repo/project-x/branches/agent-fix",
+            "repo:write:repo/project-x/main",
+            "search:query:web"
+          ],
+          "max_hours": 4.0
+        },
+        "dac_no_attenuation": {
+          "dls": 200.0,
+          "reach": 0.4464,
+          "usable_targets": [
+            "docs:read:docs/alice/private/diary",
+            "docs:read:docs/alice/project-x/notes",
+            "docs:read:docs/alice/project-x/spec",
+            "docs:write:docs/alice/private/diary",
+            "docs:write:docs/alice/project-x/notes",
+            "mail:send:mail/external",
+            "mail:send:mail/internal",
+            "model:invoke:models/large",
+            "model:invoke:models/small",
+            "repo:read:repo/infra/terraform",
+            "repo:read:repo/project-x/README.md",
+            "repo:read:repo/project-x/src/main.py",
+            "repo:write:repo/project-x/branches/agent-fix",
+            "repo:write:repo/project-x/main",
+            "search:query:web"
+          ],
+          "max_hours": 4.0
+        },
+        "dac_bearer": {
+          "dls": 200.0,
+          "reach": 0.4464,
+          "usable_targets": [
+            "docs:read:docs/alice/private/diary",
+            "docs:read:docs/alice/project-x/notes",
+            "docs:read:docs/alice/project-x/spec",
+            "docs:write:docs/alice/private/diary",
+            "docs:write:docs/alice/project-x/notes",
+            "mail:send:mail/external",
+            "mail:send:mail/internal",
+            "model:invoke:models/large",
+            "model:invoke:models/small",
+            "repo:read:repo/infra/terraform",
+            "repo:read:repo/project-x/README.md",
+            "repo:read:repo/project-x/src/main.py",
+            "repo:write:repo/project-x/branches/agent-fix",
+            "repo:write:repo/project-x/main",
+            "search:query:web"
+          ],
+          "max_hours": 4.0
+        },
+        "dac": {
+          "dls": 200.0,
+          "reach": 0.4464,
+          "usable_targets": [
+            "docs:read:docs/alice/private/diary",
+            "docs:read:docs/alice/project-x/notes",
+            "docs:read:docs/alice/project-x/spec",
+            "docs:write:docs/alice/private/diary",
+            "docs:write:docs/alice/project-x/notes",
+            "mail:send:mail/external",
+            "mail:send:mail/internal",
+            "model:invoke:models/large",
+            "model:invoke:models/small",
+            "repo:read:repo/infra/terraform",
+            "repo:read:repo/project-x/README.md",
+            "repo:read:repo/project-x/src/main.py",
+            "repo:write:repo/project-x/branches/agent-fix",
+            "repo:write:repo/project-x/main",
+            "search:query:web"
+          ],
+          "max_hours": 4.0
+        }
+      }
+    }
+  ],
+  "provenance": {
+    "commit": "fda796bb80f9ce3eaffcac89045f286d09d3caee",
+    "command": "python -m aegis_nexus bench --out reports",
+    "python": "3.10.6",
+    "platform": "Windows-10-10.0.26200-SP0",
+    "pyjwt": "2.10.1",
+    "cryptography": "50.0.1",
+    "fixture_sha256": "0cd21896db993ef4",
+    "generated_at": "2026-09-29T09:22:37+00:00",
+    "seed": 7
+  }
+}
